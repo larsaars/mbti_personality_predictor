@@ -36,8 +36,7 @@ with open('model/lemmatizer.pkl', 'rb') as f:
 
 for name in personality_types:
     with open(f'model/{name}.pkl', 'rb') as f:
-        model: XGBClassifier = pkl.load(f)
-        models.append(model)
+        models.append(pkl.load(f))
 
 # pre processing methods
 # Splitting the MBTI personality into 4 letters and binarizing it
@@ -93,9 +92,7 @@ def pre_process_text(data: list, remove_stop_words=True, remove_mbti_profiles=Tr
     return np.array(list_posts)
 
 
-def predict(my_posts_s: str) -> str:
-    my_posts = list(my_posts_s)
-
+def predict(my_posts: list) -> str:
     my_posts = pre_process_text(my_posts, remove_stop_words=True, remove_mbti_profiles=True)
 
     my_X_cnt = cntizer.transform(my_posts)
@@ -103,11 +100,11 @@ def predict(my_posts_s: str) -> str:
 
     results = []
     for model in models:
-        results.append(model.predict(my_X_tfidf)[0])
+        results.append(round(model.predict(my_X_tfidf).mean(), 0))
 
     return translate_back(results)
 
 
 if __name__ == '__main__':
     while True:
-        print('>> ' + predict(input('<< ')))
+        print('>> ' + predict(input('<< ').split('|||')))
