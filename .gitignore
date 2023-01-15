@@ -1,5 +1,6 @@
 /__pycache__/
 /.idea/
 /venv/
+/.ipynb_checkpoints/
 mbti.csv
 preprocessed.csv
